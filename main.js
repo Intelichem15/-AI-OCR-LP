@@ -22,7 +22,7 @@ function calculate() {
   // Calculate results (年間)
   const totalOrders = fax + email;
   const totalMinutesMonth = totalOrders * time;
-  const savedMinutesMonth = totalMinutesMonth * 0.7; // 70% reduction
+  const savedMinutesMonth = totalMinutesMonth * 0.9; // 90% reduction
   const savedHoursYear = Math.round((savedMinutesMonth / 60) * 12); // 年間
   const salesCallsYear = Math.round((savedMinutesMonth / 15) * 12); // 15 min per call, 年間
   const annualCost = Math.round((savedHoursYear * 2000) / 10000); // 2000 yen/hour
