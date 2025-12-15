@@ -1,0 +1,3411 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>出版業界特化型AI-OCR｜受注業務を自動化</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue-deep: #0c2d4d;
+      --blue-dark: #164e73;
+      --blue-primary: #0ea5e9;
+      --blue-light: #38bdf8;
+      --blue-lighter: #7dd3fc;
+      --blue-pale: #e0f2fe;
+      --blue-bg: #f0f9ff;
+      --blue-bg-light: #f8fcff;
+      --orange-accent: #f97316;
+      --orange-hover: #ea580c;
+      --orange-glow: rgba(249, 115, 22, 0.3);
+      --white: #ffffff;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --success: #10b981;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: var(--white);
+      color: var(--gray-900);
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gray-600);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .logo-circuit {
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+      margin: 0 0.15rem;
+    }
+
+    .header-cta {
+      background: var(--orange-accent);
+      color: var(--white);
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .header-cta:hover {
+      background: var(--orange-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px var(--orange-glow);
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 50%, #7dd3fc 100%);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(ellipse at 20% 80%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(14, 165, 233, 0.1) 0%, transparent 40%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4rem;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-content {
+      color: var(--gray-900);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--white);
+      border: 1px solid var(--blue-light);
+      color: var(--blue-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(14, 165, 233, 0.15);
+    }
+
+    .hero-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.75rem);
+      font-weight: 900;
+      line-height: 1.3;
+      margin-bottom: 1.5rem;
+      color: var(--gray-900);
+    }
+
+    .hero-title .highlight {
+      color: var(--blue-primary);
+      position: relative;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: var(--gray-600);
+      margin-bottom: 2rem;
+      max-width: 480px;
+      line-height: 1.8;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--orange-accent);
+      color: var(--white);
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: var(--orange-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px var(--orange-glow);
+    }
+
+    .btn-secondary {
+      background: var(--white);
+      color: var(--blue-primary);
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 2px solid var(--blue-primary);
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--blue-primary);
+      color: var(--white);
+    }
+
+    /* PC Mockup - MacBook Style */
+    .hero-visual {
+      position: relative;
+      perspective: 2000px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .laptop {
+      position: relative;
+      transform-style: preserve-3d;
+      width: 100%;
+      max-width: 550px;
+    }
+
+    .laptop-screen {
+      background: linear-gradient(180deg, #78716c 0%, #57534e 50%, #44403c 100%);
+      border-radius: 14px 14px 0 0;
+      padding: 10px 10px 6px 10px;
+      position: relative;
+      box-shadow: 
+        0 -5px 30px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .laptop-screen::before {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      background: radial-gradient(circle, #1c1917 40%, #0c0a09 100%);
+      border-radius: 50%;
+    }
+
+    .laptop-display {
+      background: #fff;
+      border-radius: 3px;
+      overflow: hidden;
+      aspect-ratio: 16 / 10;
+      box-shadow: 
+        inset 0 0 0 1px rgba(0, 0, 0, 0.2);
+    }
+
+    .laptop-notch {
+      position: absolute;
+      bottom: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(180deg, #6b7280 0%, #4b5563 100%);
+      border-radius: 0 0 3px 3px;
+    }
+
+    .laptop-bottom {
+      background: linear-gradient(180deg, #a8a29e 0%, #78716c 100%);
+      height: 10px;
+      border-radius: 0;
+      position: relative;
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .laptop-keyboard {
+      background: linear-gradient(180deg, #78716c 0%, #57534e 50%, #44403c 100%);
+      padding: 8px 8px 16px;
+      border-radius: 0 0 14px 14px;
+      position: relative;
+      transform: perspective(600px) rotateX(-12deg);
+      transform-origin: top center;
+      box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.4),
+        0 15px 30px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .keyboard-keys {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 6px;
+    }
+
+    .keyboard-row {
+      display: flex;
+      gap: 2px;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .key {
+      background: linear-gradient(180deg, #1c1917 0%, #0c0a09 100%);
+      height: 11px;
+      flex: 1;
+      min-width: 8px;
+      max-width: 20px;
+      border-radius: 2px;
+      box-shadow: 
+        0 1px 0 #000,
+        inset 0 0.5px 0 rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+
+    .key.w-12 { flex: 1.2; max-width: 24px; }
+    .key.w-14 { flex: 1.4; max-width: 28px; }
+    .key.w-16 { flex: 1.6; max-width: 32px; }
+    .key.w-18 { flex: 1.8; max-width: 36px; }
+    .key.w-20 { flex: 2; max-width: 40px; }
+    .key.w-24 { flex: 2.4; max-width: 48px; }
+    .key.space { flex: 5; max-width: 140px; }
+
+    .trackpad {
+      background: linear-gradient(180deg, #292524 0%, #1c1917 100%);
+      width: 45%;
+      max-width: 160px;
+      height: 85px;
+      margin: 0 auto;
+      border-radius: 6px;
+      box-shadow: 
+        inset 0 1px 4px rgba(0, 0, 0, 0.5),
+        inset 0 0 0 0.5px rgba(255, 255, 255, 0.05),
+        0 0.5px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    /* Screen Content */
+    .screen-content {
+      padding: 0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+    }
+
+    .screen-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      background: linear-gradient(180deg, #f5f5f5 0%, #e5e5e5 100%);
+      border-bottom: 1px solid #d4d4d4;
+    }
+
+    .screen-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .screen-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .screen-dot:nth-child(1) { background: linear-gradient(180deg, #ff6b6b, #ee5a5a); }
+    .screen-dot:nth-child(2) { background: linear-gradient(180deg, #ffd93d, #f5c800); }
+    .screen-dot:nth-child(3) { background: linear-gradient(180deg, #6bcb77, #4caf50); }
+
+    .screen-title {
+      font-size: 0.45rem;
+      color: var(--gray-600);
+      margin-left: auto;
+      font-weight: 500;
+    }
+
+    .screen-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .screen-panel {
+      background: var(--white);
+      border-radius: 8px;
+      padding: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .panel-title {
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: var(--gray-700);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .panel-title-icon {
+      width: 14px;
+      height: 14px;
+      stroke-width: 2.5;
+    }
+
+    /* FAX Input Panel */
+    .fax-input-panel {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-color: #fcd34d;
+    }
+
+    .fax-preview {
+      background: var(--white);
+      border: 1px solid #fde68a;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 0.5rem;
+      color: var(--gray-600);
+      line-height: 1.5;
+    }
+
+    .fax-label {
+      font-weight: 700;
+      color: var(--gray-700);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .fax-handwriting {
+      font-family: 'Comic Sans MS', cursive;
+      color: #374151;
+      font-size: 0.55rem;
+      line-height: 1.6;
+    }
+
+    /* Output Panel */
+    .output-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .csv-output-mini {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 1px solid #86efac;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 0.48rem;
+      font-family: 'SF Mono', 'Monaco', monospace;
+    }
+
+    .csv-header-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #bbf7d0;
+      margin-bottom: 4px;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    .csv-data-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      color: var(--gray-600);
+    }
+
+    .reply-fax-mini {
+      background: linear-gradient(135deg, var(--blue-bg) 0%, var(--blue-pale) 100%);
+      border: 1px solid var(--blue-light);
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 0.48rem;
+    }
+
+    .reply-fax-mini-header {
+      color: var(--blue-primary);
+      font-weight: 700;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    /* Status badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px 8px;
+      border-radius: 50px;
+      font-size: 0.45rem;
+      font-weight: 600;
+    }
+
+    .status-success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-processing {
+      background: var(--blue-pale);
+      color: var(--blue-primary);
+    }
+
+    /* Format Section */
+    .format-section {
+      background: linear-gradient(180deg, var(--white) 0%, #e0f2fe 100%);
+      padding: 5rem 2rem;
+    }
+
+    .format-section .section-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+    }
+
+    .format-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .format-grid-bottom {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      max-width: 50%;
+    }
+
+    .format-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 2px solid rgba(14, 165, 233, 0.15);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .format-card:hover {
+      border-color: var(--blue-primary);
+      box-shadow: 0 8px 30px rgba(14, 165, 233, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .format-card-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .format-card-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Hand-written FAX style */
+    .format-fax {
+      width: 100%;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-size: 0.7rem;
+    }
+
+    .format-fax-header {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: var(--blue-primary);
+      font-weight: 600;
+      font-size: 0.65rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .format-fax-line {
+      color: var(--gray-500);
+      font-size: 0.6rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .format-fax-handwriting {
+      font-family: 'Comic Sans MS', cursive;
+      color: var(--gray-700);
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: var(--white);
+      border-radius: 4px;
+      border-left: 3px solid var(--blue-primary);
+    }
+
+    /* Chirashi style */
+    .format-chirashi {
+      width: 100%;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-radius: 8px;
+      padding: 0.75rem;
+      position: relative;
+    }
+
+    .format-chirashi-badge {
+      background: var(--orange-accent);
+      color: var(--white);
+      font-size: 0.5rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-weight: 700;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+
+    .format-chirashi-title {
+      font-size: 0.65rem;
+      color: var(--gray-700);
+      margin-bottom: 0.3rem;
+    }
+
+    .format-chirashi-price {
+      font-size: 0.6rem;
+      color: var(--gray-500);
+    }
+
+    .format-chirashi-order {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--gray-400);
+    }
+
+    .format-chirashi-order-text {
+      font-family: 'Comic Sans MS', cursive;
+      font-size: 0.7rem;
+      color: var(--gray-800);
+    }
+
+    /* Tanzaku style */
+    .format-tanzaku {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .format-tanzaku-slip {
+      width: 40px;
+      height: 100px;
+      background: linear-gradient(180deg, #fefce8 0%, #fef9c3 100%);
+      border: 1px solid #fde047;
+      border-radius: 4px;
+      padding: 0.3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.4rem;
+      color: var(--gray-600);
+      transform: rotate(-5deg);
+    }
+
+    .format-tanzaku-slip:nth-child(2) {
+      transform: rotate(3deg);
+    }
+
+    .format-tanzaku-barcode {
+      width: 80%;
+      height: 20px;
+      background: repeating-linear-gradient(
+        90deg,
+        #000 0px,
+        #000 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      margin: 0.3rem 0;
+    }
+
+    /* Email style */
+    .format-email {
+      width: 100%;
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .format-email-header {
+      background: var(--gray-100);
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .format-email-field {
+      font-size: 0.55rem;
+      color: var(--gray-500);
+      display: flex;
+      gap: 0.3rem;
+    }
+
+    .format-email-field span {
+      color: var(--gray-700);
+    }
+
+    .format-email-body {
+      padding: 0.75rem;
+      font-size: 0.6rem;
+      color: var(--gray-600);
+      line-height: 1.5;
+    }
+
+    /* Excel style */
+    .format-excel {
+      width: 100%;
+      background: var(--white);
+      border: 1px solid var(--gray-300);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .format-excel-header {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: var(--blue-primary);
+    }
+
+    .format-excel-header span {
+      padding: 0.3rem;
+      font-size: 0.5rem;
+      color: var(--white);
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .format-excel-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .format-excel-row span {
+      padding: 0.3rem;
+      font-size: 0.5rem;
+      color: var(--gray-600);
+      text-align: center;
+      border-right: 1px solid var(--gray-200);
+    }
+
+    /* Various formats style */
+    .format-various {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      width: 100%;
+    }
+
+    .format-various-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 0.75rem;
+      background: var(--gray-50);
+      border-radius: 8px;
+      border: 1px solid var(--gray-200);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      transition: all 0.2s ease;
+    }
+
+    .format-various-item:hover {
+      background: var(--blue-bg);
+      border-color: var(--blue-light);
+    }
+
+    /* CSV Output style */
+    .format-csv {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .format-csv-icon {
+      width: 60px;
+      height: 60px;
+      color: var(--blue-primary);
+    }
+
+    .format-csv-text {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .format-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .format-grid-bottom {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .format-grid,
+      .format-grid-bottom {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Risk Section (経営リスク) */
+    .risk-section {
+      background: linear-gradient(180deg, #0a2540 0%, #0c4a6e 100%);
+      padding: 6rem 2rem;
+    }
+
+    .risk-section .section-header {
+      margin-bottom: 3rem;
+    }
+
+    .risk-section .section-title {
+      color: var(--white);
+      font-size: clamp(1.6rem, 3vw, 2.25rem);
+    }
+
+    .risk-section .section-title .highlight-yellow {
+      color: #38bdf8;
+    }
+
+    .risk-section .section-subtitle {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .risk-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .risk-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .risk-card:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-4px);
+    }
+
+    .risk-category {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.25);
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      color: #7dd3fc;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.75rem;
+    }
+
+    .risk-number {
+      position: absolute;
+      top: -12px;
+      left: 24px;
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 1px;
+    }
+
+    .risk-headline {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
+
+    .risk-headline .emphasis {
+      color: #fbbf24;
+    }
+
+    .risk-body {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+
+    .risk-body strong {
+      color: #fbbf24;
+      font-weight: 600;
+    }
+
+    .risk-stat {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .risk-stat-value {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #fbbf24;
+    }
+
+    .risk-stat-unit {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    @media (max-width: 900px) {
+      .risk-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .risk-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Bridge Section */
+    .bridge-section {
+      background: linear-gradient(180deg, #0c4a6e 0%, #0369a1 50%, #0ea5e9 100%);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .bridge-inner {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .bridge-headline {
+      font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+      font-weight: 900;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .bridge-body {
+      color: var(--white);
+      font-size: 1.05rem;
+      line-height: 1.9;
+      margin-bottom: 2rem;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    }
+
+    .bridge-body strong {
+      color: #fbbf24;
+      font-weight: 700;
+    }
+
+    .bridge-arrow {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .bridge-arrow svg {
+      width: 48px;
+      height: 48px;
+      color: var(--blue-primary);
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-10px);
+      }
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+
+    /* Problems Section */
+    .section {
+      padding: 6rem 2rem;
+      position: relative;
+    }
+
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-label {
+      color: var(--blue-primary);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 900;
+      margin-bottom: 1rem;
+      color: var(--gray-900);
+    }
+
+    .section-subtitle {
+      color: var(--gray-600);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .problems-section {
+      background: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 100%);
+    }
+
+    .problems-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .problem-card {
+      background: var(--white);
+      border: 2px solid rgba(14, 165, 233, 0.2);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .problem-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--blue-primary), var(--blue-light));
+      opacity: 1;
+    }
+
+    .problem-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 40px rgba(14, 165, 233, 0.15);
+      border-color: var(--blue-primary);
+    }
+
+    .problem-card:hover::before {
+      opacity: 1;
+    }
+
+    .problem-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .problem-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--white);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .problem-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--gray-900);
+    }
+
+    .problem-title span {
+      color: var(--blue-primary);
+    }
+
+    .problem-desc {
+      color: var(--gray-700);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    /* Solution Section */
+    .solution-section {
+      background: linear-gradient(180deg, #e0f2fe 0%, var(--white) 100%);
+      padding: 6rem 2rem;
+    }
+
+    .solution-section .section-title {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+    }
+
+    .solution-section .section-title .highlight {
+      color: var(--blue-primary);
+    }
+
+    .solution-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .solution-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      border: 2px solid rgba(14, 165, 233, 0.15);
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 2rem;
+      align-items: center;
+      position: relative;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+    }
+
+    .solution-card:hover {
+      box-shadow: 0 8px 30px rgba(14, 165, 233, 0.12);
+      border-color: var(--blue-primary);
+    }
+
+    .solution-left {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .solution-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .solution-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--blue-pale);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .solution-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--blue-primary);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .solution-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .solution-label {
+      font-size: 0.75rem;
+      color: var(--blue-primary);
+      font-weight: 700;
+    }
+
+    .solution-title {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--gray-900);
+      line-height: 1.4;
+    }
+
+    .solution-desc {
+      color: var(--gray-600);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .solution-highlight {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(59, 130, 246, 0.05));
+      border-left: 3px solid var(--blue-primary);
+      border-radius: 0 8px 8px 0;
+      padding: 0.875rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .solution-highlight-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--blue-primary);
+      flex-shrink: 0;
+    }
+
+    .solution-highlight-text {
+      font-size: 0.85rem;
+      color: var(--blue-primary);
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .solution-right {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .solution-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    .solution-check {
+      width: 18px;
+      height: 18px;
+      background: var(--blue-pale);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .solution-check svg {
+      width: 10px;
+      height: 10px;
+      stroke: var(--blue-primary);
+      fill: none;
+      stroke-width: 3;
+    }
+
+    .solution-feature-text {
+      font-size: 0.85rem;
+      color: var(--gray-600);
+      line-height: 1.5;
+    }
+
+    .solution-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 4rem;
+      font-weight: 700;
+      color: var(--blue-pale);
+      line-height: 1;
+      user-select: none;
+    }
+
+    @media (max-width: 900px) {
+      .solution-card {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .solution-number {
+        position: absolute;
+        top: 1rem;
+        right: 1.5rem;
+        font-size: 3rem;
+      }
+    }
+
+    /* Use Cases Section */
+    .usecase-section {
+      background: var(--white);
+    }
+
+    .usecase-notice {
+      background: var(--blue-pale);
+      border: 1px solid var(--blue-light);
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 3rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--gray-700);
+    }
+
+    .usecase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+
+    .usecase-card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--gray-200);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .usecase-header {
+      background: linear-gradient(135deg, var(--blue-pale), var(--blue-bg));
+      padding: 1.5rem;
+      color: var(--gray-900);
+      border-bottom: 1px solid var(--blue-light);
+    }
+
+    .usecase-label {
+      font-size: 0.8rem;
+      color: var(--blue-primary);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .usecase-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .usecase-body {
+      padding: 1.5rem;
+    }
+
+    .usecase-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .usecase-stat {
+      background: var(--blue-bg);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .usecase-stat-value {
+      font-size: 1.75rem;
+      font-weight: 900;
+      color: var(--blue-primary);
+    }
+
+    .usecase-stat-label {
+      font-size: 0.8rem;
+      color: var(--gray-600);
+    }
+
+    .usecase-note {
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    /* Simulator Section */
+    .simulator-section {
+      background: linear-gradient(180deg, var(--white) 0%, #e0f2fe 100%);
+    }
+
+    .simulator-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--white);
+      border: 2px solid var(--blue-primary);
+      border-radius: 20px;
+      padding: 3rem;
+      box-shadow: 0 8px 30px rgba(14, 165, 233, 0.12);
+    }
+
+    .simulator-form {
+      display: grid;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-label {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--gray-900);
+    }
+
+    .form-hint {
+      font-size: 0.8rem;
+      color: var(--gray-400);
+    }
+
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .slider {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 8px;
+      background: var(--gray-200);
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      background: var(--blue-primary);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .slider::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+    }
+
+    .slider-value {
+      min-width: 60px;
+      text-align: right;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--blue-primary);
+    }
+
+    .simulator-results {
+      background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      text-align: center;
+      border: 2px solid rgba(14, 165, 233, 0.3);
+    }
+
+    .result-item {
+      padding: 1rem;
+    }
+
+    .result-value {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #0284c7;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-unit {
+      font-size: 1rem;
+      color: var(--gray-700);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--gray-700);
+    }
+
+    .simulator-note {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      margin-top: 1.5rem;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      background: linear-gradient(180deg, #e0f2fe 0%, var(--white) 100%);
+    }
+
+    .section-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+      color: var(--white);
+      padding: 0.4rem 1.25rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .faq-category {
+      margin-bottom: 2.5rem;
+    }
+
+    .faq-category:last-child {
+      margin-bottom: 0;
+    }
+
+    .faq-category-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .faq-category-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .faq-category-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--white);
+    }
+
+    .faq-category-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .faq-item {
+      background: var(--white);
+      border: 2px solid rgba(14, 165, 233, 0.15);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    }
+
+    .faq-item:hover {
+      border-color: var(--blue-primary);
+    }
+
+    .faq-item.active {
+      border-color: var(--blue-primary);
+      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.1);
+    }
+
+    .faq-question {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      font-family: inherit;
+      gap: 1rem;
+    }
+
+    .faq-question:hover {
+      color: var(--blue-primary);
+    }
+
+    .faq-toggle {
+      width: 28px;
+      height: 28px;
+      background: var(--blue-primary);
+      border-radius: 50%;
+      flex-shrink: 0;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .faq-toggle::before,
+    .faq-toggle::after {
+      content: '';
+      position: absolute;
+      background: var(--white);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s ease;
+    }
+
+    .faq-toggle::before {
+      width: 12px;
+      height: 2px;
+    }
+
+    .faq-toggle::after {
+      width: 2px;
+      height: 12px;
+    }
+
+    .faq-item.active .faq-toggle::after {
+      transform: translate(-50%, -50%) rotate(90deg);
+      opacity: 0;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+    }
+
+    .faq-answer p {
+      padding: 0 1.5rem 1.25rem 1.5rem;
+      margin: 0;
+      color: var(--gray-600);
+      font-size: 0.9rem;
+      line-height: 1.8;
+      border-left: 3px solid var(--blue-light);
+      margin-left: 1.5rem;
+      margin-right: 1.5rem;
+      margin-bottom: 1.25rem;
+      padding: 0.75rem 1rem;
+      background: var(--blue-bg);
+      border-radius: 0 8px 8px 0;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      padding: 8rem 2rem;
+      background: linear-gradient(180deg, var(--white) 0%, #bae6fd 50%, #7dd3fc 100%);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .cta-title {
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 900;
+      margin-bottom: 1rem;
+      color: var(--gray-900);
+    }
+
+    .cta-subtitle {
+      font-size: 1.1rem;
+      color: var(--gray-600);
+      margin-bottom: 2.5rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .cta-section .btn-primary {
+      background: var(--orange-accent);
+      padding: 1.25rem 2.5rem;
+      font-size: 1.1rem;
+    }
+
+    .cta-section .btn-primary:hover {
+      background: var(--orange-hover);
+    }
+
+    .cta-section .btn-secondary {
+      background: var(--white);
+      color: var(--blue-primary);
+      border-color: var(--blue-primary);
+      padding: 1.25rem 2.5rem;
+      font-size: 1.1rem;
+    }
+
+    .cta-section .btn-secondary:hover {
+      background: var(--blue-primary);
+      color: var(--white);
+    }
+
+    .cta-note {
+      font-size: 0.85rem;
+      color: var(--gray-500);
+    }
+
+    /* Footer */
+    .footer {
+      background: linear-gradient(180deg, #0a2540 0%, #061a2e 100%);
+      padding: 4rem 2rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-main {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .footer-logo-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--white);
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      width: fit-content;
+      gap: 0.5rem;
+    }
+
+    .footer-logo-svg {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .logo-circuit-left {
+      width: 30px;
+      height: 38px;
+    }
+
+    .logo-circuit-right {
+      width: 30px;
+      height: 38px;
+    }
+
+    .footer-logo-text {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #4b5563;
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: -0.02em;
+    }
+
+    .footer-logo-text .ai {
+      color: #1f2937;
+    }
+
+    .footer-brand-desc {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+
+    .footer-address {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+
+    .footer-column h4 {
+      color: var(--white);
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .footer-links a {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--white);
+    }
+
+    .footer-contact-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-contact-link:hover {
+      color: var(--white);
+    }
+
+    .footer-contact-link svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .footer-social-label {
+      color: var(--white);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-social-links {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.8);
+      padding: 0.4rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .social-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--white);
+    }
+
+    .social-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-copy {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.8rem;
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .footer-legal a {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-legal a:hover {
+      color: var(--white);
+    }
+
+    /* Fixed Demo Button */
+    .fixed-demo-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--orange-accent);
+      color: var(--white);
+      padding: 1rem 1.5rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 20px rgba(249, 115, 22, 0.4);
+      transition: all 0.3s ease;
+      z-index: 999;
+    }
+
+    .fixed-demo-btn:hover {
+      background: var(--orange-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(249, 115, 22, 0.5);
+    }
+
+    .fixed-demo-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .footer-main {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+
+      .footer-brand {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .footer-main {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-brand {
+        grid-column: span 1;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-legal {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+      }
+
+      .fixed-demo-btn {
+        bottom: 1rem;
+        right: 1rem;
+        padding: 0.75rem 1.25rem;
+        font-size: 0.85rem;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .hero-subtitle {
+        margin: 0 auto 2rem;
+      }
+
+      .hero-cta-group {
+        justify-content: center;
+      }
+
+      .hero-visual {
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .simulator-results {
+        grid-template-columns: 1fr;
+      }
+
+      .usecase-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .section {
+        padding: 4rem 1rem;
+      }
+
+      .simulator-container {
+        padding: 1.5rem;
+      }
+
+      .problems-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .screen-body {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="#" class="logo">
+        <!-- 左側の青い回路 -->
+        <svg class="logo-circuit" viewBox="0 0 36 44" fill="none" width="28" height="34">
+          <!-- 上部の水平回路 -->
+          <circle cx="6" cy="6" r="2.5" stroke="#0ea5e9" stroke-width="2" fill="none"/>
+          <line x1="8.5" y1="6" x2="18" y2="6" stroke="#0ea5e9" stroke-width="2"/>
+          <line x1="18" y1="6" x2="18" y2="10" stroke="#0ea5e9" stroke-width="2"/>
+          <line x1="18" y1="10" x2="30" y2="10" stroke="#0ea5e9" stroke-width="2"/>
+          <circle cx="30" cy="10" r="2.5" stroke="#0ea5e9" stroke-width="2" fill="none"/>
+          <!-- 下部の分岐回路 -->
+          <circle cx="10" cy="18" r="2.5" stroke="#0ea5e9" stroke-width="2" fill="none"/>
+          <line x1="10" y1="20.5" x2="10" y2="28" stroke="#0ea5e9" stroke-width="2"/>
+          <circle cx="10" cy="28" r="1.5" fill="#0ea5e9"/>
+          <line x1="10" y1="28" x2="10" y2="38" stroke="#0ea5e9" stroke-width="2"/>
+          <circle cx="10" cy="38" r="2.5" stroke="#0ea5e9" stroke-width="2" fill="none"/>
+          <line x1="10" y1="28" x2="20" y2="28" stroke="#0ea5e9" stroke-width="2"/>
+          <line x1="20" y1="28" x2="20" y2="38" stroke="#0ea5e9" stroke-width="2"/>
+          <circle cx="20" cy="38" r="2.5" stroke="#0ea5e9" stroke-width="2" fill="none"/>
+        </svg>
+        <span class="logo-text">Trans<span style="color: #1f2937;">AI</span></span>
+        <!-- 右側の紫〜赤の回路 -->
+        <svg class="logo-circuit" viewBox="0 0 36 44" fill="none" width="28" height="34">
+          <!-- 上部の紫の水平回路 -->
+          <circle cx="6" cy="10" r="2.5" stroke="#9333ea" stroke-width="2" fill="none"/>
+          <line x1="8.5" y1="10" x2="18" y2="10" stroke="#9333ea" stroke-width="2"/>
+          <line x1="18" y1="10" x2="18" y2="6" stroke="#9333ea" stroke-width="2"/>
+          <line x1="18" y1="6" x2="30" y2="6" stroke="#9333ea" stroke-width="2"/>
+          <circle cx="30" cy="6" r="2.5" stroke="#9333ea" stroke-width="2" fill="none"/>
+          <!-- 下部の赤の分岐回路 -->
+          <circle cx="26" cy="18" r="2.5" stroke="#dc2626" stroke-width="2" fill="none"/>
+          <line x1="26" y1="20.5" x2="26" y2="28" stroke="#dc2626" stroke-width="2"/>
+          <circle cx="26" cy="28" r="1.5" fill="#dc2626"/>
+          <line x1="26" y1="28" x2="26" y2="38" stroke="#dc2626" stroke-width="2"/>
+          <circle cx="26" cy="38" r="2.5" stroke="#dc2626" stroke-width="2" fill="none"/>
+          <line x1="26" y1="28" x2="16" y2="28" stroke="#dc2626" stroke-width="2"/>
+          <line x1="16" y1="28" x2="16" y2="38" stroke="#dc2626" stroke-width="2"/>
+          <circle cx="16" cy="38" r="2.5" stroke="#dc2626" stroke-width="2" fill="none"/>
+        </svg>
+      </a>
+      <a href="#contact" class="header-cta">無料で試す</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          そのAIは、<br>
+          <span class="highlight">「番線」</span>と<span class="highlight">「ISBN」</span>を<br>
+          理解していますか？
+        </h1>
+        <p class="hero-subtitle">
+          汎用OCRでは解決できない出版業界特有の受注業務を、書誌マスタ照合で自動化。FAX・メール・Excelの注文を統一CSVに変換します。
+        </p>
+        <div class="hero-cta-group">
+          <a href="#contact" class="btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <line x1="3" y1="9" x2="21" y2="9"/>
+            </svg>
+            実際のFAX/メールで精度を試す（無料）
+          </a>
+          <a href="#simulator" class="btn-secondary">
+            削減効果を試算する
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="laptop">
+          <div class="laptop-screen">
+            <div class="laptop-display">
+              <div class="screen-content">
+                <div class="screen-header">
+                  <div class="screen-dots">
+                    <span class="screen-dot"></span>
+                    <span class="screen-dot"></span>
+                    <span class="screen-dot"></span>
+                  </div>
+                  <span class="screen-title">PubOrder AI - 受注管理</span>
+                </div>
+                <div class="screen-body">
+                  <!-- 白背景の請求書風UI -->
+                  <div style="height: 100%; background: #fff; padding: 8px; font-family: 'MS PGothic', sans-serif;">
+                    <!-- ヘッダー部分 -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                      <!-- 左上：ロゴ -->
+                      <div style="display: flex; align-items: center; gap: 4px;">
+                        <div style="width: 12px; height: 12px; background: #f97316; border-radius: 50%;"></div>
+                        <span style="font-size: 0.4rem; color: #0ea5e9; font-weight: 700;">PubOrder</span>
+                      </div>
+                      <!-- 右上：請求書No -->
+                      <div style="text-align: right;">
+                        <div style="font-size: 0.25rem; color: #6b7280;">請求書No.</div>
+                        <div style="font-size: 0.35rem; color: #1f2937; background: #fef3c7; padding: 1px 4px; border: 1px solid #fcd34d;">PO-20250312</div>
+                      </div>
+                    </div>
+                    
+                    <!-- 請求書タイトル -->
+                    <div style="text-align: center; margin-bottom: 6px;">
+                      <span style="font-size: 0.6rem; font-weight: 700; color: #1f2937; letter-spacing: 8px;">請　求　書</span>
+                    </div>
+                    
+                    <!-- 宛先と発行元 -->
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                      <div>
+                        <div style="font-size: 0.3rem; color: #6b7280;">ご請求先</div>
+                        <div style="font-size: 0.35rem; color: #1f2937; border-bottom: 1px solid #1f2937; padding-bottom: 1px;">丸善ジュンク堂書店 御中</div>
+                      </div>
+                      <div style="text-align: right; font-size: 0.28rem; color: #374151; line-height: 1.4;">
+                        <div style="background: #dcfce7; padding: 1px 3px; display: inline-block; margin-bottom: 2px;">○○出版株式会社</div>
+                        <div>〒100-0001</div>
+                        <div>東京都千代田区...</div>
+                      </div>
+                    </div>
+                    
+                    <!-- 合計金額 -->
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; padding: 3px 0; border-bottom: 1px solid #e5e7eb;">
+                      <span style="font-size: 0.3rem; color: #6b7280;">合計金額</span>
+                      <span style="font-size: 0.55rem; color: #1f2937; font-weight: 700;">¥167,400</span>
+                      <span style="font-size: 0.28rem; color: #6b7280;">（税込）</span>
+                    </div>
+                    
+                    <!-- 明細テーブル -->
+                    <div style="border: 1px solid #d1d5db; font-size: 0.28rem;">
+                      <!-- ヘッダー -->
+                      <div style="display: grid; grid-template-columns: 0.4fr 1fr 1.5fr 0.5fr 0.6fr 0.5fr 0.7fr; background: linear-gradient(180deg, #fed7aa 0%, #fdba74 100%); padding: 2px 4px; border-bottom: 1px solid #d1d5db;">
+                        <span style="color: #9a3412;">No.</span>
+                        <span style="color: #9a3412;">日付</span>
+                        <span style="color: #9a3412;">摘要</span>
+                        <span style="color: #9a3412; text-align: center;">数量</span>
+                        <span style="color: #9a3412; text-align: center;">単価</span>
+                        <span style="color: #9a3412; text-align: center;">値引</span>
+                        <span style="color: #9a3412; text-align: right;">金額</span>
+                      </div>
+                      <!-- データ行 -->
+                      <div style="background: linear-gradient(90deg, #fff7ed 0%, #fff 50%);">
+                        <div style="display: grid; grid-template-columns: 0.4fr 1fr 1.5fr 0.5fr 0.6fr 0.5fr 0.7fr; padding: 2px 4px; border-bottom: 1px solid #f3f4f6;">
+                          <span>1</span><span>3/5</span><span>AI経営戦略</span><span style="text-align: center; color: #dc2626;">5</span><span style="text-align: center;">2,800</span><span style="text-align: center; color: #dc2626;">0</span><span style="text-align: right;">14,000</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 0.4fr 1fr 1.5fr 0.5fr 0.6fr 0.5fr 0.7fr; padding: 2px 4px; border-bottom: 1px solid #f3f4f6;">
+                          <span>2</span><span>3/10</span><span>Python入門</span><span style="text-align: center; color: #dc2626;">10</span><span style="text-align: center;">3,200</span><span style="text-align: center; color: #dc2626;">500</span><span style="text-align: right;">31,500</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 0.4fr 1fr 1.5fr 0.5fr 0.6fr 0.5fr 0.7fr; padding: 2px 4px;">
+                          <span>3</span><span>3/12</span><span>データ分析...</span><span style="text-align: center; color: #dc2626;">50</span><span style="text-align: center;">2,200</span><span style="text-align: center; color: #dc2626;">0</span><span style="text-align: right;">110,000</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- 集計部分 -->
+                    <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+                      <div style="border: 1px solid #d1d5db; font-size: 0.28rem;">
+                        <div style="display: flex; background: linear-gradient(180deg, #fed7aa 0%, #fdba74 100%); padding: 2px 6px;">
+                          <span style="width: 50px;">小計</span>
+                          <span style="width: 60px; text-align: right; color: #dc2626;">¥155,500</span>
+                        </div>
+                        <div style="display: flex; padding: 2px 6px; border-top: 1px solid #f3f4f6;">
+                          <span style="width: 50px;">消費税</span>
+                          <span style="width: 60px; text-align: right; color: #dc2626;">¥11,900</span>
+                        </div>
+                        <div style="display: flex; padding: 2px 6px; border-top: 1px solid #d1d5db; background: #fef3c7;">
+                          <span style="width: 50px; font-weight: 600;">合計金額</span>
+                          <span style="width: 60px; text-align: right; font-weight: 700; color: #dc2626;">¥167,400</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="laptop-notch"></div>
+          </div>
+          <div class="laptop-bottom"></div>
+          <div class="laptop-keyboard">
+            <div class="keyboard-keys">
+              <!-- ファンクション行（Touch Bar風） -->
+              <div class="keyboard-row" style="margin-bottom: 3px;">
+                <div class="key" style="height: 8px;"></div>
+                <div class="key" style="flex: 8; max-width: none; height: 8px; background: linear-gradient(90deg, #1c1917 0%, #292524 50%, #1c1917 100%); border-radius: 3px;"></div>
+                <div class="key" style="height: 8px;"></div>
+              </div>
+              <!-- 数字行 -->
+              <div class="keyboard-row">
+                <div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key w-14"></div>
+              </div>
+              <!-- QWERTY行 -->
+              <div class="keyboard-row">
+                <div class="key w-14"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key w-14"></div>
+              </div>
+              <!-- ASDF行 -->
+              <div class="keyboard-row">
+                <div class="key w-18"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key w-18"></div>
+              </div>
+              <!-- ZXCV行 -->
+              <div class="keyboard-row">
+                <div class="key w-24"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key w-24"></div>
+              </div>
+              <!-- 最下段 -->
+              <div class="keyboard-row">
+                <div class="key w-12"></div><div class="key w-12"></div><div class="key w-12"></div><div class="key w-16"></div><div class="key space"></div><div class="key w-16"></div><div class="key w-12"></div>
+                <div style="display: flex; flex-direction: column; gap: 1px; margin-left: 2px;">
+                  <div class="key" style="height: 5px; min-width: 12px;"></div>
+                  <div style="display: flex; gap: 1px;">
+                    <div class="key" style="height: 5px; min-width: 12px;"></div>
+                    <div class="key" style="height: 5px; min-width: 12px;"></div>
+                    <div class="key" style="height: 5px; min-width: 12px;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="trackpad"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Format Section -->
+  <section class="section format-section">
+    <div class="section-inner">
+      <div class="section-header">
+        <h2 class="section-title">対応フォーマット</h2>
+        <p class="section-subtitle">さまざまな形式の注文を自動で処理</p>
+      </div>
+
+      <div class="format-grid">
+        <!-- 手書きFAX -->
+        <div class="format-card">
+          <div class="format-card-title">手書きFAX</div>
+          <div class="format-card-content">
+            <div class="format-fax">
+              <div class="format-fax-header">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                </svg>
+                書店：1234
+              </div>
+              <div class="format-fax-line">ISBN: 978-xxx...</div>
+              <div class="format-fax-handwriting">
+                手書き<br>
+                数量×2
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- チラシの余白注文 -->
+        <div class="format-card">
+          <div class="format-card-title">チラシの余白注文</div>
+          <div class="format-card-content">
+            <div style="display: flex; gap: 3px; align-items: stretch; width: 100%;">
+              <!-- 左：本のチラシ部分 -->
+              <div style="flex: 1; background: #fff; border: 1px solid #d1d5db; border-radius: 2px; padding: 4px; font-size: 0.5rem;">
+                <!-- 表紙と書誌情報 -->
+                <div style="display: flex; gap: 4px; margin-bottom: 3px;">
+                  <!-- 表紙イメージ -->
+                  <div style="width: 32px; height: 45px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fefce8 100%); border: 0.5px solid #d1d5db; border-radius: 1px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2px;">
+                    <div style="font-size: 0.25rem; color: #92400e; font-weight: 700; text-align: center; line-height: 1.2;">心が<br/>楽になる<br/>本</div>
+                    <div style="font-size: 0.15rem; color: #78716c; margin-top: 2px;">○○出版</div>
+                  </div>
+                  <!-- 書誌情報テーブル -->
+                  <div style="flex: 1; font-size: 0.35rem; color: #374151;">
+                    <div style="display: flex; border-bottom: 0.5px solid #e5e7eb; padding: 1px 0;">
+                      <span style="width: 28px; color: #6b7280;">判型</span>
+                      <span>46</span>
+                    </div>
+                    <div style="display: flex; border-bottom: 0.5px solid #e5e7eb; padding: 1px 0;">
+                      <span style="width: 28px; color: #6b7280;">出版</span>
+                      <span>2025年03月</span>
+                    </div>
+                    <div style="display: flex; border-bottom: 0.5px solid #e5e7eb; padding: 1px 0;">
+                      <span style="width: 28px; color: #6b7280;">頁数</span>
+                      <span>224</span>
+                    </div>
+                    <div style="display: flex; border-bottom: 0.5px solid #e5e7eb; padding: 1px 0;">
+                      <span style="width: 28px; color: #6b7280;">NDC</span>
+                      <span>159.6</span>
+                    </div>
+                    <div style="display: flex; padding: 1px 0;">
+                      <span style="width: 28px; color: #6b7280;">Cコード</span>
+                      <span style="font-size: 0.3rem;">0095</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- 右：手書き注文メモ -->
+              <div style="flex: 1; background: #fff; border: 1px solid #d1d5db; border-radius: 2px; padding: 5px; position: relative;">
+                <!-- 手書き風テキスト -->
+                <div style="font-family: 'Comic Sans MS', cursive, sans-serif; font-size: 0.4rem; color: #1e40af; line-height: 1.6; transform: rotate(-0.5deg);">
+                  <div>大変お世話に</div>
+                  <div>なります。</div>
+                  <div style="margin-top: 2px;">こちらの商品を</div>
+                  <div style="display: flex; align-items: center; gap: 2px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1.5px solid #dc2626; border-radius: 50%; color: #dc2626; font-weight: 700; font-size: 0.45rem;">2</span>
+                    <span>冊 注文</span>
+                  </div>
+                  <div>させて頂いて</div>
+                  <div>よろしいでしょうか。</div>
+                  <div style="margin-top: 3px;">どうぞ宜しく</div>
+                  <div style="text-decoration: underline; text-decoration-color: #dc2626;">お願いいたします。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 短冊注文 -->
+        <div class="format-card">
+          <div class="format-card-title">短冊（スリップ）</div>
+          <div class="format-card-content">
+            <div style="display: flex; gap: 4px; align-items: flex-start; justify-content: center; padding: 5px 0;">
+              <!-- 水色スリップ1（左後ろ） -->
+              <div style="width: 48px; height: 125px; background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%); border: 1px solid #7dd3fc; border-radius: 1px; padding: 3px; display: flex; flex-direction: column; box-shadow: 2px 3px 8px rgba(0,0,0,0.18); transform: rotate(-10deg) translateX(8px); position: relative; z-index: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px;">
+                  <div style="font-size: 0.2rem; color: #0369a1; border: 0.5px solid #0369a1; padding: 0.5px 2px; border-radius: 1px;">B5</div>
+                </div>
+                <div style="font-size: 0.22rem; color: #0c4a6e; font-weight: 600; border-bottom: 0.5px solid #7dd3fc; padding-bottom: 1px; margin-bottom: 2px; text-align: center;">情報処理</div>
+                <div style="display: flex; gap: 1px; margin-bottom: 2px; justify-content: center;">
+                  <div style="writing-mode: vertical-rl; font-size: 0.15rem; color: #475569; border-right: 0.5px solid #94a3b8; padding-right: 1px;">書店</div>
+                  <div style="writing-mode: vertical-rl; font-size: 0.15rem; color: #475569; border-right: 0.5px solid #94a3b8; padding-right: 1px;">部数</div>
+                  <div style="writing-mode: vertical-rl; font-size: 0.15rem; color: #475569;">発売</div>
+                </div>
+                <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+                  <div style="background: repeating-linear-gradient(90deg, #1e293b 0px, #1e293b 0.8px, transparent 0.8px, transparent 2px); width: 30px; height: 28px;"></div>
+                </div>
+                <div style="font-size: 0.15rem; color: #334155; text-align: center;">9784484...</div>
+                <div style="font-size: 0.13rem; color: #64748b; text-align: right;">定価 2,400円</div>
+              </div>
+
+              <!-- 黄色スリップ（中央） -->
+              <div style="width: 45px; height: 130px; background: linear-gradient(180deg, #fef9c3 0%, #fde047 100%); border: 1px solid #eab308; border-radius: 1px; padding: 3px; display: flex; flex-direction: column; box-shadow: 2px 3px 8px rgba(0,0,0,0.18); transform: rotate(2deg) translateY(-3px); position: relative; z-index: 2;">
+                <div style="font-size: 0.18rem; color: #713f12; font-weight: 600; text-align: center; border-bottom: 0.5px solid #ca8a04; padding-bottom: 1px; margin-bottom: 1px;">売上カード</div>
+                <div style="font-size: 0.14rem; color: #a16207; text-align: right;">コミックス</div>
+                <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px;">
+                  <div style="writing-mode: vertical-rl; font-size: 0.28rem; color: #1c1917; font-weight: 700; letter-spacing: 0.5px;">天と地と</div>
+                  <div style="writing-mode: vertical-rl; font-size: 0.16rem; color: #44403c;">山田太郎</div>
+                </div>
+                <div style="font-size: 0.18rem; color: #1c1917; font-weight: 600; text-align: center; border: 0.5px solid #92400e; border-radius: 50%; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 2px;">8</div>
+                <div style="font-size: 0.13rem; color: #78716c; text-align: center;">本体 552円</div>
+              </div>
+
+              <!-- 水色スリップ2（右前） -->
+              <div style="width: 48px; height: 120px; background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%); border: 1px solid #7dd3fc; border-radius: 1px; padding: 3px; display: flex; flex-direction: column; box-shadow: 2px 3px 8px rgba(0,0,0,0.18); transform: rotate(8deg) translateX(-8px) translateY(5px); position: relative; z-index: 3;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1px;">
+                  <div style="font-size: 0.18rem; color: #0369a1; font-weight: 600;">○○館</div>
+                </div>
+                <div style="font-size: 0.14rem; color: #64748b; text-align: right;">コミックス</div>
+                <div style="font-size: 0.2rem; color: #0c4a6e; font-weight: 600; text-align: center; border-bottom: 0.5px solid #7dd3fc; padding-bottom: 1px; margin-bottom: 2px;">売上カード</div>
+                <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                  <div style="writing-mode: vertical-rl; font-size: 0.24rem; color: #0f172a; font-weight: 700;">ビッグC</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto;">
+                  <div style="background: repeating-linear-gradient(90deg, #1e293b 0px, #1e293b 0.8px, transparent 0.8px, transparent 1.8px); width: 22px; height: 18px;"></div>
+                  <div style="font-size: 0.12rem; color: #64748b; text-align: right;">定価<br/>2,709円</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- メール注文 -->
+        <div class="format-card">
+          <div class="format-card-title">メール注文</div>
+          <div class="format-card-content">
+            <div class="format-email">
+              <div class="format-email-header">
+                <div class="format-email-field">件名: <span>注文</span></div>
+              </div>
+              <div class="format-email-body">
+                『Python入門』<br>
+                10冊お願いします。
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="format-grid-bottom">
+        <!-- 様々なフォーマット -->
+        <div class="format-card">
+          <div class="format-card-title">様々なフォーマット</div>
+          <div class="format-card-content">
+            <div class="format-various">
+              <div class="format-various-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <span>Excel</span>
+              </div>
+              <div class="format-various-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <span>PDF</span>
+              </div>
+              <div class="format-various-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <span>画像</span>
+              </div>
+              <div class="format-various-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+                <span>Word</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CSV出力 -->
+        <div class="format-card">
+          <div class="format-card-title">CSV出力</div>
+          <div class="format-card-content">
+            <div class="format-csv">
+              <svg class="format-csv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+              <div class="format-csv-text">統一フォーマットで出力</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Risk Section (経営リスク) -->
+  <section class="risk-section">
+    <div class="section-inner">
+      <div class="section-header">
+        <h2 class="section-title">現場の<span class="highlight-yellow">「気合と根性」</span>による<br>手入力作業が続いていませんか？</h2>
+        <p class="section-subtitle">年間1,000万円超の埋没コスト、属人化、機会損失——<br>「当たり前」の業務が、静かに会社を蝕んでいます。</p>
+      </div>
+
+      <div class="risk-grid">
+        <!-- 1. コスト・生産性 -->
+        <div class="risk-card">
+          <span class="risk-category">コスト・生産性</span>
+          <h3 class="risk-headline">「手入力」に<span class="emphasis">年間1,000万円</span></h3>
+          <p class="risk-body">
+            紙・トナー・コピー機リース代だけで月20万円以上、年間240万円超のケースも。さらに受注FAXの仕分け・手入力による人件費は年間1,000万円規模に。本来やるべき書店営業や企画業務に手が回らず、生産性が低下しています。
+          </p>
+        </div>
+
+        <!-- 2. 属人化リスク -->
+        <div class="risk-card">
+          <span class="risk-category">属人化リスク</span>
+          <h3 class="risk-headline">退職したら<span class="emphasis">業務が止まる</span></h3>
+          <p class="risk-body">
+            「A書店はこの略称」「この字はBさんしか読めない」——暗黙知がベテラン担当者に集中し、休暇や退職で受注業務が即ストップ。BPO外注でもオペレーターが変わるたびに品質が不安定になります。
+          </p>
+        </div>
+
+        <!-- 3. 品質・信用 -->
+        <div class="risk-card">
+          <span class="risk-category">品質・信用</span>
+          <h3 class="risk-headline">1回の誤出荷で<span class="emphasis">信用崩壊</span></h3>
+          <p class="risk-body">
+            「1」と「7」の見間違い——人が入力する限り転記ミスは100%防げません。FAX注文では重複注文が発生しやすく、近刊予約や在庫管理に手間がかかります。
+          </p>
+        </div>
+
+        <!-- 4. 機会損失 -->
+        <div class="risk-card">
+          <span class="risk-category">機会損失</span>
+          <h3 class="risk-headline">回答が遅いだけで<span class="emphasis">他社に負ける</span></h3>
+          <p class="risk-body">
+            見積もりや納期回答のスピードが競争力を左右する時代。手入力の滞留で即答できず、取れたはずの注文を逃していませんか？リアルタイムな在庫情報を提供できず、書店の発注を躊躇させています。
+          </p>
+        </div>
+
+        <!-- 5. 働き方・DX -->
+        <div class="risk-card">
+          <span class="risk-category">働き方・DX</span>
+          <h3 class="risk-headline">FAXのためだけに<span class="emphasis">出社する</span></h3>
+          <p class="risk-body">
+            リモートワーク時代に「FAX確認のため出社」——物理的なFAX機器に縛られ、テレワークや複数拠点での連携が困難に。時代に逆行する働き方が続いていませんか？
+          </p>
+        </div>
+
+        <!-- 6. 書店連携 -->
+        <div class="risk-card">
+          <span class="risk-category">書店連携</span>
+          <h3 class="risk-headline">取引先との<span class="emphasis">連携不足</span></h3>
+          <p class="risk-body">
+            多様な予約・注文方法に対応できず、書店への情報提供やリアルタイムな注文数把握が難しい。迅速な対応ができなければ、取引先満足度の低下につながります。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problems Section -->
+  <section class="section problems-section">
+    <div class="section-inner">
+      <div class="section-header">
+        <p class="section-label">Problem</p>
+        <h2 class="section-title">汎用AIでは越えられない<br>「出版業界の4つの壁」</h2>
+        <p class="section-subtitle">一般的なOCR・AIでは、出版業界特有の課題に対応できません</p>
+      </div>
+      <div class="problems-grid">
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <line x1="3" y1="9" x2="21" y2="9"/>
+              <line x1="9" y1="21" x2="9" y2="9"/>
+            </svg>
+          </div>
+          <h3 class="problem-title"><span>「チラシ注文」</span>の壁</h3>
+          <p class="problem-desc">書店からのFAXには、出版社の販促チラシがそのまま使われることも。汎用OCRは宣伝文句まで読み取り、ノイズだらけのデータに。</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+              <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+              <path d="M2 2l7.586 7.586"/>
+            </svg>
+          </div>
+          <h3 class="problem-title"><span>「クセ字・書き殴り」</span>の壁</h3>
+          <p class="problem-desc">「9」か「0」かわからない手書き文字。ISBNの一部が欠損。汎用OCRでは誤認識の山。結局、人間が目視確認する羽目に。</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+          </div>
+          <h3 class="problem-title"><span>「返信業務」</span>の壁</h3>
+          <p class="problem-desc">入力作業が終わっても、品切れ・重版未定の書籍は「お詫びFAX」の作成が必要。シール貼り、FAX送信…地味な作業が山積み。</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+              <polyline points="13 2 13 9 20 9"/>
+            </svg>
+          </div>
+          <h3 class="problem-title"><span>「フォーマット地獄」</span>の壁</h3>
+          <p class="problem-desc">書店ごとに異なるExcel注文書。メール本文にベタ打ちされた注文。バラバラなフォーマットを、毎回手作業で整形していませんか？</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bridge Section -->
+  <section class="bridge-section">
+    <div class="bridge-inner">
+      <h2 class="bridge-headline">この課題、「頑張り」では解決しません。<br>必要なのは、「仕組み」を変えること。</h2>
+      <p class="bridge-body">
+        現場の努力で何とかしてきた——それは事実です。<br>
+        しかし、属人化とコスト増は年々深刻化し、FAXがある限り、この構造は変わりません。<br><br>
+        解決策は、AIに<strong>「出版業界の知識」</strong>を持たせること。<br>
+        汎用OCRではなく、書誌マスタと書店マスタを理解したAIが、<br>
+        あなたの代わりに「読み」「照合し」「判断する」。<br><br>
+        それが、<strong>出版業界特化型AI-OCR</strong>です。
+      </p>
+      <div class="bridge-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <polyline points="19 12 12 19 5 12"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section class="section solution-section">
+    <div class="section-inner">
+      <div class="section-header">
+        <h2 class="section-title">出版業界特化型AI-OCRの<span class="highlight">強み</span></h2>
+        <p class="section-subtitle">汎用OCRでは不可能だった、出版業界特有の課題を完全解決</p>
+      </div>
+      <div class="solution-cards">
+        <!-- Card 01 -->
+        <div class="solution-card">
+          <div class="solution-left">
+            <div class="solution-header">
+              <div class="solution-title-group">
+                <span class="solution-label">驚異の補正力</span>
+                <h3 class="solution-title">ISBN × 書名 × マスタ照合</h3>
+              </div>
+            </div>
+            <p class="solution-desc">ISBNと書名の「合わせ技」で、片方または両方が汚れていても正解を導き出す</p>
+            <div class="solution-highlight">
+              <svg class="solution-highlight-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <span class="solution-highlight-text">目視確認の手間が激減。AIが迷ったものだけ人が見ればOK</span>
+            </div>
+          </div>
+          <div class="solution-right">
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">ISBNの一部が欠損していても、書名から自動補正</span>
+            </div>
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">レーベンシュタイン距離を活用した高精度マッチング</span>
+            </div>
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">独自の書店マスタ照合で略称や手書きも正確に変換</span>
+            </div>
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">両方が汚れていてもAIが正確な値を予測</span>
+            </div>
+          </div>
+          <div class="solution-number">01</div>
+        </div>
+
+        <!-- Card 02 -->
+        <div class="solution-card">
+          <div class="solution-left">
+            <div class="solution-header">
+              <div class="solution-title-group">
+                <span class="solution-label">ノイズ除去AI</span>
+                <h3 class="solution-title">チラシの余白注文OK</h3>
+              </div>
+            </div>
+            <p class="solution-desc">「注文情報」と「宣伝文言」をAIが自動判別。営業担当へのメールも転送するだけ</p>
+            <div class="solution-highlight">
+              <svg class="solution-highlight-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <span class="solution-highlight-text">新刊案内チラシへの注文も、営業個人宛メールも、もう怖くありません</span>
+            </div>
+          </div>
+          <div class="solution-right">
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">書店員がチラシ余白に書き込んだ注文数を正確抽出</span>
+            </div>
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">宣伝キャッチコピーなどのノイズを自動除去</span>
+            </div>
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">相田、市間注文書、手書きメモ（裏紙・余注など）もOK</span>
+            </div>
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">営業担当へのメールも転送するだけ、AIが注文部分だけを抜き出します</span>
+            </div>
+          </div>
+          <div class="solution-number">02</div>
+        </div>
+
+        <!-- Card 03 -->
+        <div class="solution-card">
+          <div class="solution-left">
+            <div class="solution-header">
+              <div class="solution-title-group">
+                <span class="solution-label">高自動化率</span>
+                <h3 class="solution-title">9割は人が見なくてもOK</h3>
+              </div>
+            </div>
+            <p class="solution-desc">AIの確信度が高いものは自動処理、あったものだけ人間が確認</p>
+            <div class="solution-highlight">
+              <svg class="solution-highlight-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <span class="solution-highlight-text">処理時間を90%削減。確認作業は1点・30秒で完了</span>
+            </div>
+          </div>
+          <div class="solution-right">
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">確信度95%以上は完全自動処理</span>
+            </div>
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">疑義があるものだけハイライト表示</span>
+            </div>
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">ワンクリックで確定・修正可能</span>
+            </div>
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">修正データは学習して次回から精度向上</span>
+            </div>
+          </div>
+          <div class="solution-number">03</div>
+        </div>
+
+        <!-- Card 04 -->
+        <div class="solution-card">
+          <div class="solution-left">
+            <div class="solution-header">
+              <div class="solution-title-group">
+                <span class="solution-label">完全自動化</span>
+                <h3 class="solution-title">返送用FAX自動生成</h3>
+              </div>
+            </div>
+            <p class="solution-desc">在庫がない場合も、業務をストップさせない</p>
+            <div class="solution-highlight">
+              <svg class="solution-highlight-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <span class="solution-highlight-text">返信業務まで含めた完全自動化を実現</span>
+            </div>
+          </div>
+          <div class="solution-right">
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">在庫あり → CSV出力して基幹システムへ</span>
+            </div>
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">品切重版未定/在庫待ち → 返送FAX（PDF）を自動生成</span>
+            </div>
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">ワンクリックで返信内容をカスタマイズ可能</span>
+            </div>
+            <div class="solution-feature">
+              <span class="solution-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="solution-feature-text">シール貼りや手書き返信の作業がゼロに</span>
+            </div>
+          </div>
+          <div class="solution-number">04</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases Section -->
+  <section class="section usecase-section">
+    <div class="section-inner">
+      <div class="section-header">
+        <p class="section-label">Use Case</p>
+        <h2 class="section-title">想定ユースケース</h2>
+        <p class="section-subtitle">出版業界特化型AI-OCR導入による業務改善のモデルケース</p>
+      </div>
+      <div class="usecase-notice">
+        ※ 以下は想定されるユースケースです。数値は自社検証環境による試算であり、実際の効果は導入環境により異なります。
+      </div>
+      <div class="usecase-grid">
+        <div class="usecase-card">
+          <div class="usecase-header">
+            <p class="usecase-label">MODEL CASE 01</p>
+            <h3 class="usecase-title">中堅出版社A社（年商30億円規模）</h3>
+          </div>
+          <div class="usecase-body">
+            <p style="color: var(--gray-600); font-size: 0.9rem; margin-bottom: 1rem;">
+              月間FAX注文 約500枚、メール・Excel注文 約200件を処理する受注チーム3名体制のケース
+            </p>
+            <div class="usecase-stats">
+              <div class="usecase-stat">
+                <div class="usecase-stat-value">約70%</div>
+                <div class="usecase-stat-label">入力工数削減</div>
+              </div>
+              <div class="usecase-stat">
+                <div class="usecase-stat-value">約40時間</div>
+                <div class="usecase-stat-label">月間創出時間</div>
+              </div>
+            </div>
+            <p style="color: var(--gray-600); font-size: 0.85rem;">
+              創出した時間を、書店への営業電話や新規開拓に充当可能
+            </p>
+            <p class="usecase-note">※自社検証環境による試算</p>
+          </div>
+        </div>
+        <div class="usecase-card">
+          <div class="usecase-header">
+            <p class="usecase-label">MODEL CASE 02</p>
+            <h3 class="usecase-title">専門出版社B社（年商15億円規模）</h3>
+          </div>
+          <div class="usecase-body">
+            <p style="color: var(--gray-600); font-size: 0.9rem; margin-bottom: 1rem;">
+              専門書の品切れが多く、返信FAX作成に毎日1時間以上費やしていたケース
+            </p>
+            <div class="usecase-stats">
+              <div class="usecase-stat">
+                <div class="usecase-stat-value">約90%</div>
+                <div class="usecase-stat-label">返信FAX作成削減</div>
+              </div>
+              <div class="usecase-stat">
+                <div class="usecase-stat-value">約25時間</div>
+                <div class="usecase-stat-label">月間創出時間</div>
+              </div>
+            </div>
+            <p style="color: var(--gray-600); font-size: 0.85rem;">
+              シール貼り・手書き作業からの解放、ミス削減にも貢献
+            </p>
+            <p class="usecase-note">※自社検証環境による試算</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Simulator Section -->
+  <section class="section simulator-section" id="simulator">
+    <div class="section-inner">
+      <div class="section-header">
+        <p class="section-label">Simulator</p>
+        <h2 class="section-title">削減効果シミュレーター</h2>
+        <p class="section-subtitle">貴社の月間処理件数から、削減効果を試算します</p>
+      </div>
+      <div class="simulator-container">
+        <div class="simulator-form">
+          <div class="form-group">
+            <label class="form-label">月間FAX注文枚数</label>
+            <div class="slider-container">
+              <input type="range" class="slider" id="faxCount" min="300" max="10000" value="3000" step="100">
+              <span class="slider-value" id="faxValue">3,000枚</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">月間メール・Excel注文件数</label>
+            <div class="slider-container">
+              <input type="range" class="slider" id="emailCount" min="50" max="3000" value="500" step="50">
+              <span class="slider-value" id="emailValue">500件</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">1件あたりの処理時間（分）</label>
+            <div class="slider-container">
+              <input type="range" class="slider" id="timePerOrder" min="1" max="10" value="3" step="1">
+              <span class="slider-value" id="timeValue">3分</span>
+            </div>
+            <span class="form-hint">入力・確認・返信FAX作成を含む平均時間</span>
+          </div>
+        </div>
+        <div class="simulator-results">
+          <div class="result-item">
+            <div class="result-value" id="resultTime">1,470</div>
+            <div class="result-unit">時間/年</div>
+            <div class="result-label">削減できる作業時間</div>
+          </div>
+          <div class="result-item">
+            <div class="result-value" id="resultCalls">約5,880</div>
+            <div class="result-unit">件/年</div>
+            <div class="result-label">創出できる営業電話数</div>
+          </div>
+          <div class="result-item">
+            <div class="result-value" id="resultCost">約294</div>
+            <div class="result-unit">万円/年</div>
+            <div class="result-label">人件費換算</div>
+          </div>
+        </div>
+        <p class="simulator-note">
+          ※ 削減率70%、時給2,000円、1営業電話15分として試算。実際の効果は導入環境により異なります。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section faq-section" id="faq">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-badge">FAQ</span>
+        <h2 class="section-title">よくあるご質問</h2>
+        <p class="section-subtitle">お客様からよくいただくご質問にお答えします</p>
+      </div>
+
+      <!-- 導入について -->
+      <div class="faq-category">
+        <div class="faq-category-header">
+          <span class="faq-category-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </span>
+          <h3 class="faq-category-title">導入について</h3>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>導入までにどのくらいの期間がかかりますか？</span>
+              <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+              <p>最短3日で稼働可能です。マスタデータ（書誌・書店）のCSV登録とテスト処理を経て、すぐにご利用開始いただけます。既存システムとの連携が必要な場合は1〜2週間程度のセットアップ期間をいただいております。</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>JPOとの契約は必要ですか？</span>
+              <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+              <p>いいえ、不要です。貴社が既にお持ちの書誌マスタ・書店マスタをそのまま使用できます。追加のライセンス費用や契約は一切発生しません。</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>本当に3日で導入できますか？</span>
+              <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+              <p>はい。マスタデータ（CSV）さえあれば、即座にAIが学習を開始します。複雑な初期設定は不要です。既存システムとの連携が必要な場合でも、1〜2週間で稼働開始できます。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 機能について -->
+      <div class="faq-category">
+        <div class="faq-category-header">
+          <span class="faq-category-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </span>
+          <h3 class="faq-category-title">機能について</h3>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>手書きとExcel、両方混ざっていても大丈夫ですか？</span>
+              <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+              <p>はい、問題ありません。AIがソースを自動判別して処理します。FAX、メール本文、Excel添付、PDF添付など、どんな形式が混在していても、すべて統一CSVに変換できます。</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>どのようなFAX形式に対応していますか？</span>
+              <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+              <p>新刊案内チラシの余白注文、短冊（スリップ）、専用注文書、手書きメモなど、あらゆる形式に対応しています。特に、汎用OCRでは難しいチラシ余白の注文情報と宣伝文言の自動判別が可能です。</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>ISBNが読み取れない場合はどうなりますか？</span>
+              <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+              <p>ISBNが汚れていても、書名との合わせ技で正確に補正します。レーベンシュタイン距離を活用した高精度マッチングにより、ISBNと書名の両方が不明瞭でも正解を導き出します。</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>返信FAXの自動生成とは？</span>
+              <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+              <p>在庫がない商品について、「返信不要」「重版待ち」「重版未定」などの返信FAXをシステムが自動生成します。ワンクリックで内容をカスタマイズでき、シール貼付や手書き返信の手間がゼロになります。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- セキュリティについて -->
+      <div class="faq-category">
+        <div class="faq-category-header">
+          <span class="faq-category-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </span>
+          <h3 class="faq-category-title">セキュリティについて</h3>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>うちのマスタデータを入れて大丈夫？</span>
+              <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+              <p>はい、ご安心ください。書誌マスタや書店マスタは暗号化された状態で保存され、ISO27001認証取得済みのデータセンターで厳重に管理されます。また、ローカル環境での学習機能により、データを外部に送信せずにAIの精度向上が可能です。</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>読み取れないFAXはどうなる？</span>
+              <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+              <p>AIが読み取りに不安を感じた箇所は、プレビュー画面で色付きハイライト表示されます。担当者がその部分だけを確認・修正できます。修正されたデータはAIが学習し、次回から同じようなケースでも正確に読めるようになります。</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>データの保管期間は？</span>
+              <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+              <p>標準では処理完了後90日間保管されます。保管期間はプランに応じてカスタマイズ可能です。エンタープライズプランでは、貴社のポリシーに合わせた保管期間設定が可能です。</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>既存社員の雇用への影響は？</span>
+              <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+              <p>単純作業が減ることで、従業員はより付加価値の高い業務（書店営業、販促企画など）に注力できるようになります。業務効率化により、従業員満足度の向上や離職率低下への貢献が期待できます。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 料金・契約について -->
+      <div class="faq-category">
+        <div class="faq-category-header">
+          <span class="faq-category-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </span>
+          <h3 class="faq-category-title">料金・契約について</h3>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>初期費用はかかりますか？</span>
+              <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+              <p>いいえ、初期費用は0円です。月額料金のみでご利用いただけます。また、無料トライアル期間中はクレジットカード登録も不要です。</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>解約時の縛りはありますか？</span>
+              <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+              <p>ありません。最低契約期間の縛りはなく、いつでも解約可能です。解約手続きも管理画面から簡単に行えます。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- サポートについて -->
+      <div class="faq-category">
+        <div class="faq-category-header">
+          <span class="faq-category-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </span>
+          <h3 class="faq-category-title">サポートについて</h3>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>サポート体制はどうなっていますか？</span>
+              <span class="faq-toggle"></span>
+            </button>
+            <div class="faq-answer">
+              <p>プランに応じてメール・電話でのサポートを提供しています。プロフェッショナルプラン以上は優先サポート、エンタープライズプランは専任担当者がつきます。導入時の技術サポートや定期的な活用セミナーも実施しております。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section" id="contact">
+    <div class="cta-inner">
+      <h2 class="cta-title">まずは無料で精度をお試しください</h2>
+      <p class="cta-subtitle">
+        貴社の実際のFAX・メールで、AIの読み取り精度を確認できます。<br>
+        一番読みづらいFAXを5枚お送りいただければ、処理結果をお返しします。
+      </p>
+      <div class="cta-buttons">
+        <a href="#" class="btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+          </svg>
+          実際のFAX/メールで精度を試す（無料）
+        </a>
+        <a href="#" class="btn-secondary">
+          オンラインデモを予約
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-main">
+        <div class="footer-brand">
+          <div class="footer-logo-box">
+            <div class="footer-logo-svg">
+              <!-- 左側の青い回路 -->
+              <svg class="logo-circuit-left" viewBox="0 0 36 44" fill="none">
+                <!-- 上部の水平回路 -->
+                <circle cx="6" cy="6" r="2.5" stroke="#0ea5e9" stroke-width="2" fill="none"/>
+                <line x1="8.5" y1="6" x2="18" y2="6" stroke="#0ea5e9" stroke-width="2"/>
+                <line x1="18" y1="6" x2="18" y2="10" stroke="#0ea5e9" stroke-width="2"/>
+                <line x1="18" y1="10" x2="30" y2="10" stroke="#0ea5e9" stroke-width="2"/>
+                <circle cx="30" cy="10" r="2.5" stroke="#0ea5e9" stroke-width="2" fill="none"/>
+                <!-- 下部の分岐回路 -->
+                <circle cx="10" cy="18" r="2.5" stroke="#0ea5e9" stroke-width="2" fill="none"/>
+                <line x1="10" y1="20.5" x2="10" y2="28" stroke="#0ea5e9" stroke-width="2"/>
+                <circle cx="10" cy="28" r="1.5" fill="#0ea5e9"/>
+                <line x1="10" y1="28" x2="10" y2="38" stroke="#0ea5e9" stroke-width="2"/>
+                <circle cx="10" cy="38" r="2.5" stroke="#0ea5e9" stroke-width="2" fill="none"/>
+                <line x1="10" y1="28" x2="20" y2="28" stroke="#0ea5e9" stroke-width="2"/>
+                <line x1="20" y1="28" x2="20" y2="38" stroke="#0ea5e9" stroke-width="2"/>
+                <circle cx="20" cy="38" r="2.5" stroke="#0ea5e9" stroke-width="2" fill="none"/>
+              </svg>
+              <!-- Text -->
+              <span class="footer-logo-text">Trans<span class="ai">AI</span></span>
+              <!-- 右側の紫〜赤の回路 -->
+              <svg class="logo-circuit-right" viewBox="0 0 36 44" fill="none">
+                <!-- 上部の紫の水平回路 -->
+                <circle cx="6" cy="10" r="2.5" stroke="#9333ea" stroke-width="2" fill="none"/>
+                <line x1="8.5" y1="10" x2="18" y2="10" stroke="#9333ea" stroke-width="2"/>
+                <line x1="18" y1="10" x2="18" y2="6" stroke="#9333ea" stroke-width="2"/>
+                <line x1="18" y1="6" x2="30" y2="6" stroke="#9333ea" stroke-width="2"/>
+                <circle cx="30" cy="6" r="2.5" stroke="#9333ea" stroke-width="2" fill="none"/>
+                <!-- 下部の赤の分岐回路 -->
+                <circle cx="26" cy="18" r="2.5" stroke="#dc2626" stroke-width="2" fill="none"/>
+                <line x1="26" y1="20.5" x2="26" y2="28" stroke="#dc2626" stroke-width="2"/>
+                <circle cx="26" cy="28" r="1.5" fill="#dc2626"/>
+                <line x1="26" y1="28" x2="26" y2="38" stroke="#dc2626" stroke-width="2"/>
+                <circle cx="26" cy="38" r="2.5" stroke="#dc2626" stroke-width="2" fill="none"/>
+                <line x1="26" y1="28" x2="16" y2="28" stroke="#dc2626" stroke-width="2"/>
+                <line x1="16" y1="28" x2="16" y2="38" stroke="#dc2626" stroke-width="2"/>
+                <circle cx="16" cy="38" r="2.5" stroke="#dc2626" stroke-width="2" fill="none"/>
+              </svg>
+            </div>
+          </div>
+          <p class="footer-brand-desc">先端技術で日本の中核産業にレバレッジをかける</p>
+          <div class="footer-address">
+            〒112-0003<br>
+            東京都文京区春日1丁目6番5-305号
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h4>会社情報</h4>
+          <ul class="footer-links">
+            <li><a href="#">事業内容</a></li>
+            <li><a href="#">沿革</a></li>
+            <li><a href="#">メンバー紹介</a></li>
+            <li><a href="#">情報セキュリティポリシー</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>事業内容</h4>
+          <ul class="footer-links">
+            <li><a href="#">AIソリューション事業</a></li>
+            <li><a href="#">医療研究AI事業</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>お問い合わせ</h4>
+          <a href="#" class="footer-contact-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            お問い合わせフォーム
+          </a>
+          <p class="footer-social-label">ソーシャルメディア</p>
+          <div class="footer-social-links">
+            <a href="#" class="social-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+              LinkedIn
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2024 株式会社トランスAI. All rights reserved.</p>
+        <div class="footer-legal">
+          <a href="#">利用規約</a>
+          <a href="#">プライバシーポリシー</a>
+          <a href="#">特定商取引法</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Fixed Demo Button -->
+  <a href="#contact" class="fixed-demo-btn">
+    無料デモを試す
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="5" y1="12" x2="19" y2="12"/>
+      <polyline points="12 5 19 12 12 19"/>
+    </svg>
+  </a>
+
+  <script>
+    // Simulator functionality
+    const faxSlider = document.getElementById('faxCount');
+    const emailSlider = document.getElementById('emailCount');
+    const timeSlider = document.getElementById('timePerOrder');
+    const faxValue = document.getElementById('faxValue');
+    const emailValue = document.getElementById('emailValue');
+    const timeValue = document.getElementById('timeValue');
+    const resultTime = document.getElementById('resultTime');
+    const resultCalls = document.getElementById('resultCalls');
+    const resultCost = document.getElementById('resultCost');
+
+    function calculate() {
+      const fax = parseInt(faxSlider.value);
+      const email = parseInt(emailSlider.value);
+      const time = parseInt(timeSlider.value);
+      
+      // Update display values with comma formatting
+      faxValue.textContent = fax.toLocaleString() + '枚';
+      emailValue.textContent = email.toLocaleString() + '件';
+      timeValue.textContent = time + '分';
+      
+      // Calculate results (年間)
+      const totalOrders = fax + email;
+      const totalMinutesMonth = totalOrders * time;
+      const savedMinutesMonth = totalMinutesMonth * 0.7; // 70% reduction
+      const savedHoursYear = Math.round((savedMinutesMonth / 60) * 12); // 年間
+      const salesCallsYear = Math.round((savedMinutesMonth / 15) * 12); // 15 min per call, 年間
+      const annualCost = Math.round((savedHoursYear * 2000) / 10000); // 2000 yen/hour
+      
+      // Update results
+      resultTime.textContent = savedHoursYear.toLocaleString();
+      resultCalls.textContent = '約' + salesCallsYear.toLocaleString();
+      resultCost.textContent = '約' + annualCost;
+    }
+
+    faxSlider.addEventListener('input', calculate);
+    emailSlider.addEventListener('input', calculate);
+    timeSlider.addEventListener('input', calculate);
+
+    // Initial calculation
+    calculate();
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(button => {
+      button.addEventListener('click', () => {
+        const faqItem = button.parentElement;
+        const isActive = faqItem.classList.contains('active');
+        
+        // Close all other items in the same category
+        const category = faqItem.closest('.faq-category');
+        category.querySelectorAll('.faq-item').forEach(item => {
+          item.classList.remove('active');
+        });
+        
+        // Toggle current item
+        if (!isActive) {
+          faqItem.classList.add('active');
+        }
+      });
+    });
+
+    // Open first FAQ item in each category by default
+    document.querySelectorAll('.faq-category').forEach(category => {
+      const firstItem = category.querySelector('.faq-item');
+      if (firstItem) {
+        firstItem.classList.add('active');
+      }
+    });
+
+    // Intersection Observer for animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.problem-card, .solution-card, .usecase-card, .faq-item').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'all 0.6s ease-out';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
